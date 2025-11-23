@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Heart, 
   Calendar, 
   Plus, 
   TrendingUp, 
   CloudRain, 
-  Sun, 
   Zap, 
   MessageCircle, 
   Camera, 
-  AlertTriangle,
   BrainCircuit,
-  ChevronRight,
   ShieldCheck,
   ThermometerSun
 } from 'lucide-react';
@@ -19,11 +16,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 // --- 模拟数据 ---
 
-// 模拟的情绪周期曲线 (正弦波模拟激素变化)
+// 模拟的情绪周期曲线
 const generateCycleData = () => {
   const data = [];
   for (let i = 1; i <= 30; i++) {
-    // 简单的模拟：1-5低(经期), 14高(排卵), 24-28低(PMS)
     let predicted = 6 + 3 * Math.sin((i - 5) * 0.25);
     if (i > 24) predicted -= 2; // PMS 惩罚
     if (predicted > 10) predicted = 10;
@@ -32,13 +28,13 @@ const generateCycleData = () => {
     data.push({
       day: `Day ${i}`,
       predicted: parseFloat(predicted.toFixed(1)),
-      actual: i < 15 ? parseFloat((predicted + (Math.random() * 2 - 1)).toFixed(1)) : null // 模拟过去几天的实际数据
+      actual: i < 15 ? parseFloat((predicted + (Math.random() * 2 - 1)).toFixed(1)) : null 
     });
   }
   return data;
 };
 
-// 模拟的历史记录流 (手账)
+// 模拟的历史记录流
 const initialEntries = [
   {
     id: 1,
@@ -67,18 +63,17 @@ const initialEntries = [
 
 export default function HerMoodApp() {
   const [activeTab, setActiveTab] = useState('home');
-  const [currentCycleDay, setCurrentCycleDay] = useState(26); // 假设今天是周期第26天 (PMS高危期)
+  // 移除未使用的 setCurrentCycleDay，避免报错
+  const [currentCycleDay] = useState(26); 
   const [showAddModal, setShowAddModal] = useState(false);
   const [entries, setEntries] = useState(initialEntries);
   
-  // 模拟输入状态
   const [newEntryText, setNewEntryText] = useState('');
   const [newEntryMood, setNewEntryMood] = useState(5);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // 首页 - 仪表盘
   const renderDashboard = () => {
-    // 根据周期天数决定状态
     const isPMS = currentCycleDay >= 24;
     const moodColor = isPMS ? 'text-red-500' : 'text-green-500';
     const bgColor = isPMS ? 'bg-red-50' : 'bg-green-50';
@@ -89,7 +84,6 @@ export default function HerMoodApp() {
 
     return (
       <div className="space-y-6 animate-fade-in pb-20">
-        {/* 头部状态卡片 */}
         <div className="bg-white rounded-3xl p-6 shadow-lg border border-slate-100 relative overflow-hidden">
           <div className={`absolute top-0 right-0 p-3 rounded-bl-2xl ${bgColor} text-xs font-bold uppercase tracking-wider ${moodColor}`}>
              Defcon Level: {isPMS ? '4 (Alert)' : '1 (Safe)'}
@@ -123,7 +117,6 @@ export default function HerMoodApp() {
           </div>
         </div>
 
-        {/* 生存指南 (Actionable Advice) */}
         <div className="bg-slate-800 text-white rounded-3xl p-6 shadow-xl transform transition hover:scale-[1.02]">
           <div className="flex items-center space-x-2 mb-3 text-yellow-400">
             <ShieldCheck className="w-5 h-5" />
@@ -138,7 +131,6 @@ export default function HerMoodApp() {
           </div>
         </div>
 
-        {/* 快速概览 */}
         <div className="grid grid-cols-2 gap-4">
            <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
               <div className="flex justify-between items-start mb-2">
@@ -194,7 +186,6 @@ export default function HerMoodApp() {
              <p className="text-slate-700 text-sm leading-relaxed">{entry.content}</p>
            </div>
 
-           {/* AI 分析胶囊 */}
            <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-100 relative">
              <div className="absolute -top-2 left-3 bg-white px-2 py-0.5 rounded-full border border-indigo-100 flex items-center shadow-sm">
                 <Zap className="w-3 h-3 text-indigo-500 mr-1" />
@@ -271,19 +262,17 @@ export default function HerMoodApp() {
     );
   };
 
-  // 添加新记录的模态框
   const renderAddModal = () => {
     if (!showAddModal) return null;
     
     const handleAdd = () => {
       setIsAnalyzing(true);
-      // 模拟 AI 分析过程
       setTimeout(() => {
         const newEntry = {
             id: Date.now(),
             date: '2023-11-22',
             time: 'Now',
-            type: 'manual', // or chat
+            type: 'manual', 
             mood: newEntryMood,
             content: newEntryText || '[图片上传分析]',
             aiAnalysis: '根据描述/截图，这属于典型的“寻求共情”信号。她并不需要你解决问题，只是想让你站在她这边。',
@@ -293,7 +282,7 @@ export default function HerMoodApp() {
         setIsAnalyzing(false);
         setShowAddModal(false);
         setNewEntryText('');
-        setActiveTab('timeline'); // 跳转到时间轴看结果
+        setActiveTab('timeline'); 
       }, 1500);
     };
 
@@ -308,7 +297,8 @@ export default function HerMoodApp() {
               type="range" 
               min="1" max="10" 
               value={newEntryMood} 
-              onChange={(e) => setNewEntryMood(e.target.value)}
+              // 修复：强制转换为数字，解决 TS 报错
+              onChange={(e) => setNewEntryMood(parseInt(e.target.value))}
               className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
             <div className="flex justify-between mt-2 text-xs text-slate-400">
