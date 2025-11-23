@@ -210,8 +210,8 @@ export default function HerMoodApp() {
         <p className="text-slate-500 text-sm px-2 mb-6">基于过去 3 个月的数据模型预测</p>
         
         {/* 关键修复：这里强制设置了高度为 350px，防止 flex 布局把它拉长 */}
-        <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100" style={{ height: '350px' }}>
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100" style={{ height: '300px' }}>
+          <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="day" hide />
