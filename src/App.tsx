@@ -63,7 +63,6 @@ const initialEntries = [
 
 export default function HerMoodApp() {
   const [activeTab, setActiveTab] = useState('home');
-  // 移除未使用的变量，确保 Vercel 不报错
   const [currentCycleDay] = useState(26); 
   const [showAddModal, setShowAddModal] = useState(false);
   const [entries, setEntries] = useState(initialEntries);
@@ -209,7 +208,9 @@ export default function HerMoodApp() {
         <h2 className="text-xl font-bold text-slate-800 mb-2 px-2">周期全景</h2>
         <p className="text-slate-500 text-sm px-2 mb-6">基于过去 3 个月的数据模型预测</p>
         
-        <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex-grow max-h-[400px]">
+        {/* 修复点：这里原来是 flex-grow，现在改成了固定高度 h-80 (320px) */}
+        {/* 这样图表就不会因为屏幕太长而被拉伸变形了 */}
+        <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 h-80 min-h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
